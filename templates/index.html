@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Top 10 places to visit in Bengaluru — food, temples, hills, parties and shopping.">
+    <title>Top 10 Places to Visit in Bengaluru</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<header class="site-header">
+    <a class="brand" href="#top" aria-label="Top 10 Places Bengaluru home">
+        <span class="brand-mark">10</span>
+        <span class="brand-text">BENGALURU<br><small>TOP PLACES</small></span>
+    </a>
+
+    <button class="menu-toggle" id="menuToggle" aria-label="Open menu">☰</button>
+
+    <nav class="main-nav" id="mainNav">
+        <a href="#places">Top 10</a>
+        <a href="#food" data-filter="food">Food</a>
+        <a href="#temples" data-filter="temples">Temples</a>
+        <a href="#hills" data-filter="hills">Hills</a>
+        <a href="#party" data-filter="party">Party</a>
+        <a href="#shopping" data-filter="shopping">Shopping</a>
+    </nav>
+
+    <a class="explore-btn" href="#places">Explore Bengaluru <span>↗</span></a>
+</header>
+
+<main id="top">
+    <section class="hero">
+        <div class="hero-slides">
+            {% for hero in heroes %}
+            <article class="hero-slide {% if loop.first %}active{% endif %}"
+                     style="background-image: url('{{ hero.image }}');">
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
+                    <p class="eyebrow">{{ hero.eyebrow }}</p>
+                    <h1>{{ hero.name }}</h1>
+                    <p class="hero-subtitle">{{ hero.text }}</p>
+                    <a class="hero-cta" href="#places">Explore the list <span>↓</span></a>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+
+        <div class="hero-bottom">
+            <div class="hero-title-small">
+                <span>TRAVEL GUIDE</span>
+                <strong>TOP 10 PLACES TO VISIT<br>IN BENGALURU</strong>
+            </div>
+            <div class="hero-dots" id="heroDots">
+                {% for hero in heroes %}
+                <button class="{% if loop.first %}active{% endif %}" data-slide="{{ loop.index0 }}">{{ "%02d"|format(loop.index) }}</button>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section class="intro section">
+        <div class="section-kicker">WELCOME TO BENGALURU</div>
+        <div class="intro-grid">
+            <h2>One city.<br><em>Many ways</em> to explore.</h2>
+            <p>Discover Bengaluru through landmarks, gardens, temples, hills, food, nightlife and shopping. Use the categories above to jump straight to the experience you want.</p>
+        </div>
+
+        <div class="category-strip" id="categoryStrip">
+            <button class="category-pill active" data-category="all">All places</button>
+            <button class="category-pill" data-category="food">Food</button>
+            <button class="category-pill" data-category="temples">Temples</button>
+            <button class="category-pill" data-category="hills">Hills</button>
+            <button class="category-pill" data-category="party">Party</button>
+            <button class="category-pill" data-category="shopping">Shopping</button>
+        </div>
+    </section>
+
+    <section class="places-section section" id="places">
+        <div class="section-heading">
+            <div>
+                <div class="section-kicker">THE COLLECTION</div>
+                <h2>10 places worth putting<br>on your Bengaluru list.</h2>
+            </div>
+            <p id="resultCount">Showing all 10 places</p>
+        </div>
+
+        <div class="places-grid" id="placesGrid">
+            {% for place in places %}
+            <article class="place-card"
+                     data-category="{{ place.category }}"
+                     data-name="{{ place.name|lower }}">
+                <div class="card-image-wrap">
+                    <img src="{{ place.image }}" alt="{{ place.name }}" loading="lazy">
+                    <span class="rank-badge">#{{ "%02d"|format(place.rank) }}</span>
+                    <a class="image-credit" href="{{ place.photo_source }}" target="_blank" rel="noopener">
+                        {{ place.photo_credit }}
+                    </a>
+                </div>
+
+                <div class="card-body">
+                    <div class="card-meta">
+                        {% for tag in place.tags %}
+                        <span>{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+                    <h3>{{ place.name }}</h3>
+                    <p>{{ place.description }}</p>
+                    <a class="research-link" href="{{ place.research_source }}" target="_blank" rel="noopener">
+                        Source: {{ place.research_credit }} <span>↗</span>
+                    </a>
+
+                    <div class="map-label">EXACT LOCATION</div>
+                    <div class="map-frame">
+                        <iframe
+                            src="{{ place.map }}"
+                            title="Map showing {{ place.name }}"
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+
+                    <a class="map-link" href="{{ place.maps_link }}" target="_blank" rel="noopener">
+                        Open directions in Google Maps <span>↗</span>
+                    </a>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+
+        <div class="empty-state" id="emptyState">
+            <h3>No places in this category yet.</h3>
+            <p>Choose another category to continue exploring.</p>
+        </div>
+    </section>
+
+    <section class="feature section">
+        <div class="feature-card">
+            <div>
+                <div class="section-kicker">PLAN YOUR DAY</div>
+                <h2>Morning hills.<br>Afternoon food.<br>Night-time city.</h2>
+            </div>
+            <p>Build your own Bengaluru day by mixing experiences from the categories. This first version keeps the site simple; later we can add accounts, saved places, itineraries and bookings.</p>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="footer-brand">
+        <span class="brand-mark">10</span>
+        <div>
+            <strong>TOP 10 PLACES</strong>
+            <span>TO VISIT IN BENGALURU</span>
+        </div>
+    </div>
+
+    <div class="footer-contact">
+        <span class="footer-contact-label">CONTACT US</span>
+        <a href="mailto:darshan712871@gmail.com">
+            darshan712871@gmail.com
+        </a>
+    </div>
+</footer>
+
+<script>
+    window.PLACE_COUNT = {{ places|length }};
+</script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
